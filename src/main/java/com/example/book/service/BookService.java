@@ -20,6 +20,7 @@ public class BookService {
         add.setCategory(dto.getCategory());
         add.setQuantity(dto.getQuantity());
         add.setTitle(dto.getTitle());
-        return repository.save(add);
+        Book books = repository.save(add);
+        return books;
     }
 }

@@ -19,7 +19,7 @@ public class UserService {
         user.setPassword(request.getPassword());
         user.setEmail(request.getEmail());
         user.setContactNumber(request.getContactNumber());
-        repository.save(user);
-        return user;
+        User users = repository.save(user);
+        return users;
     }
 }

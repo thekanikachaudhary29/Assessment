@@ -9,7 +9,6 @@ import com.example.book.repository.UserRepository;
 import com.example.book.service.AuthService;
 import com.example.book.service.JwtService;
 import com.example.book.service.JwtUtil;
-import com.example.book.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

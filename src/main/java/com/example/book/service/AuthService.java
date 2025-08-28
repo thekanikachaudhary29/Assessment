@@ -14,24 +14,10 @@ public class AuthService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
-//    private SecurityConfig config;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-        return user; // your User entity should implement UserDetails
+        return user;
     }
-
-
-//    public void login(@Valid LogInDto request) {
-//        User user = userRepository.findByUsername(login.getUsername())
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//        if (!config.passwordEncoder().matches(login.getPassword(), user.getPassword())) {
-//            throw new RuntimeException("Invalid Password");
-//        }
-//        String token = jwtUtil.generateToken(user.getUsername());
-//        return ResponseEntity.ok(new JwtResponse(token)
-//    }
 }

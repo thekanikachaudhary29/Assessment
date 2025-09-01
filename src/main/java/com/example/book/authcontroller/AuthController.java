@@ -8,14 +8,17 @@ import com.example.book.entity.User;
 import com.example.book.repository.UserRepository;
 import com.example.book.service.AuthService;
 import com.example.book.service.JwtService;
-import com.example.book.service.JwtUtil;
+import com.example.book.util.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +42,8 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     private final JwtService jwtService;  // service to generate JWT
    // private final AuthService auth;
@@ -57,7 +62,8 @@ public class AuthController {
     public ResponseEntity<User> register(@Valid @RequestBody UserRequest request) {
         User user = new User();
         user.setUsername(request.getUserName());
-        user.setPassword(request.getPassword());
+       // user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setContactNumber(request.getContactNumber());
         return ResponseEntity.ok(userRepository.save(user));
@@ -65,17 +71,21 @@ public class AuthController {
 
     //login
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> logIn(@RequestBody @Valid LogInDto request) {
+    public ResponseEntity<?> logIn(@RequestBody @Valid LogInDto request) {
         // authenticate user
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(), request.getPassword()
-                )
-        );
-
-        // if authentication passed, generate token
-        UserDetails userDetails = authService.loadUserByUsername(request.getUsername());
-        String token = jwtService.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(), request.getPassword()
+                    )
+            );
+            // if authentication passed, generate token
+            UserDetails userDetails = authService.loadUserByUsername(request.getUsername());
+            String token = jwtService.generateToken(userDetails);
+            return ResponseEntity.ok(new JwtResponse(token));
+        } catch(Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed: " + e.getMessage());
+        }
     }
 }

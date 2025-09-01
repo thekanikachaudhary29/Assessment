@@ -22,17 +22,17 @@ public class BookDto {
     @Size(min = 2, max = 50, message = "Author must be between 2 and 50 characters")
     private String author;
 
-    @NotNull(message = "ISBN is required")
-    @Digits(integer = 13, fraction = 0, message = "ISBN must be integer ")
-    private Integer ISBN;
+    @NotBlank(message = "ISBN is required")
+    @Pattern(regexp = "\\d{13}", message = "ISBN must be exactly 13 digits")
+    private String ISBN;
 
-    @NotNull(message = "Category is required")
+    @NotBlank(message = "Category is required")
     private String category;
 
     @NotNull(message = "Year is required")
     private Date publishedYear;
 
-    @NotBlank(message = "Quantity is required")
+    @NotNull(message = "Quantity is required")
     @Min(value = 1, message = "Quantity must be at least 1")
     private Integer quantity;
 }

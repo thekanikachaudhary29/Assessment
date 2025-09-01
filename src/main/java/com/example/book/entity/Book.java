@@ -23,7 +23,7 @@ public class Book {
     private Long id;
     private String title;
     private String author;
-    private Integer ISBN;
+    private String ISBN;
     private String category;
     private Date publishedYear;
     private Integer quantity;

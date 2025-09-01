@@ -22,7 +22,7 @@ public class BookController {
     }
 
     //create books in library
-    @PreAuthorize("Role('ADMIN','LIBRARIAN')")
+    @PreAuthorize("hasAnyRole('ADMIN','LIBRARIAN')")
     @PostMapping("/create")
     public ResponseEntity<Book> create(@Valid @RequestBody BookDto dto) {
       Book createdBook = bookService.add(dto);
